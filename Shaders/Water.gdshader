@@ -1,27 +1,27 @@
 shader_type spatial;
 
-uniform vec3 albedo : source_color;
-uniform vec3 albedo2 : source_color;
+uniform vec3 albedo : source_color = vec3(0.0, 0.322, 0.431);
+uniform vec3 albedo2 : source_color = vec3(0.0, 0.475, 0.765);
 uniform float metallic : hint_range(0.0, 1.0) = 0;
 uniform float roughness : hint_range(0.0, 1.0) = 0.02;
 uniform sampler2D wave;
 uniform sampler2D texture_normal;
 uniform sampler2D texture_normal2;
-uniform vec2 wave_direction = vec2(2.0,0.0); // Direction of wave 1
+uniform vec2 wave_direction = vec2(0.0,1.0); // Direction of wave 1
 uniform vec2 wave_direction2 = vec2(0.0,1.0); // Direction of wave 2
 uniform float time_scale : hint_range(0.0, 0.2, 0.005) = 0.025; // Rate of movement multiplied by TIME
 uniform float noise_scale = 10.0;
 uniform float height_scale = 0.15;
 
-uniform vec4 color_deep : source_color; // Deep depth color
-uniform vec4 color_shallow : source_color; // Shallow depth color
+uniform vec4 color_deep : source_color = vec4(0.106, 0.294, 0.329, 1.); // Deep depth color
+uniform vec4 color_shallow : source_color = vec4(0.0, 0.553, 0.651, 1.); // Shallow depth color
 uniform float beers_law = 2.0; // Beer's law application
 uniform float depth_offset = -0.75; // Offset
 
 uniform float edge_scale = 0.1;
 uniform float near = 1.0;
 uniform float far = 100.0;
-uniform vec3 edge_color : source_color;
+uniform vec3 edge_color : source_color = vec3(1., 1., 1.);
 
 // Varying variables
 varying float height;
@@ -48,19 +48,19 @@ void vertex() {
 
 void fragment() {
 	// Depth variables and calc
-	float depth_texture = texture(DEPTH_TEXTURE, SCREEN_UV).r * 2.0 - 1.0;
-	float depth = PROJECTION_MATRIX[3][2] / (depth_texture + PROJECTION_MATRIX[2][2]);
-	float depth_blend = exp((depth+VERTEX.z + depth_offset) * -beers_law);
-	depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
-	float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
-
-	//float depth_texture = texture(DEPTH_TEXTURE, SCREEN_UV).x;
-	//vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, depth_texture);
-	//vec4 view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
-	//view.xyz /= view.w;
-	//float depth_blend = exp((-view.z+VERTEX.z + depth_offset) * -beers_law);
+	//float depth_texture = texture(DEPTH_TEXTURE, SCREEN_UV).r * 2.0 - 1.0;
+	//float depth = PROJECTION_MATRIX[3][2] / (depth_texture + PROJECTION_MATRIX[2][2]);
+	//float depth_blend = exp((depth+VERTEX.z + depth_offset) * -beers_law);
 	//depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
 	//float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
+
+	float depth_texture = texture(DEPTH_TEXTURE, SCREEN_UV).x;
+	vec3 ndc = vec3(SCREEN_UV, depth_texture);
+	vec4 view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	//view.xyz /= view.w;
+	float depth_blend = exp((-view.z+VERTEX.z + depth_offset) * -beers_law);
+	depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
+	float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
 
 
 	// Retrieving depth color and applying the deep and shallow colors
