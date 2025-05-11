@@ -34,8 +34,9 @@ float fresnel(float amount, vec3 normal, vec3 view)
 {
 	return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0 )), amount);
 }
+
 float edge(float depth){
-	depth = 2.0 * depth - 1.0;
+	depth = 1.0 - 2.0 * depth;
 	return near * far / (far + depth * (near - far));
 }
 
@@ -52,6 +53,15 @@ void fragment() {
 	float depth_blend = exp((depth+VERTEX.z + depth_offset) * -beers_law);
 	depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
 	float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
+
+	//float depth_texture = texture(DEPTH_TEXTURE, SCREEN_UV).x;
+	//vec3 ndc = vec3(SCREEN_UV * 2.0 - 1.0, depth_texture);
+	//vec4 view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+	//view.xyz /= view.w;
+	//float depth_blend = exp((-view.z+VERTEX.z + depth_offset) * -beers_law);
+	//depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
+	//float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
+
 
 	// Retrieving depth color and applying the deep and shallow colors
 	vec3 screen_color = textureLod(SCREEN_TEXTURE, SCREEN_UV, depth_blend_power * 2.5).rgb;
