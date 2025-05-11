@@ -7,8 +7,8 @@ uniform float roughness : hint_range(0.0, 1.0) = 0.02;
 uniform sampler2D wave;
 uniform sampler2D texture_normal;
 uniform sampler2D texture_normal2;
-uniform vec2 wave_direction = vec2(0.0,1.0); // Direction of wave 1
-uniform vec2 wave_direction2 = vec2(0.0,1.0); // Direction of wave 2
+uniform vec2 wave_direction = vec2(0.0, 1.0); // Direction of wave 1
+uniform vec2 wave_direction2 = vec2(0.0, 1.0); // Direction of wave 2
 uniform float time_scale : hint_range(0.0, 0.2, 0.005) = 0.025; // Rate of movement multiplied by TIME
 uniform float noise_scale = 10.0;
 uniform float height_scale = 0.15;
@@ -58,7 +58,7 @@ void fragment() {
 	vec3 ndc = vec3(SCREEN_UV, depth_texture);
 	vec4 view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
 	//view.xyz /= view.w;
-	float depth_blend = exp((-view.z+VERTEX.z + depth_offset) * -beers_law);
+	float depth_blend = exp((-view.z+ VERTEX.z + depth_offset) * -beers_law);
 	depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
 	float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
 
@@ -78,7 +78,7 @@ void fragment() {
 	vec2 time2 = (TIME * wave_direction2) * time_scale; // Movement rate of second wave
 
 	// Blend normal maps into one
-	vec3 normal_blend = mix(texture(texture_normal,world_pos.xz + time).rgb, texture(texture_normal2,world_pos.xz + time2).rgb, 0.5);
+	vec3 normal_blend = mix(texture(texture_normal, world_pos.xz + time).rgb, texture(texture_normal2,world_pos.xz + time2).rgb, 0.5);
 
 	// Calculate Fresnel
 	float fresnel = fresnel(5.0, NORMAL, VIEW);
@@ -86,7 +86,7 @@ void fragment() {
 
 	vec3 depth_color_adj = mix(edge_color, color, step(edge_scale, z_dif));
 
-	ALBEDO = clamp(surface_color + depth_color_adj, vec3(0.0),vec3(1.0));
+	ALBEDO = clamp(surface_color + depth_color_adj, vec3(0.0), vec3(1.0));
 	METALLIC = metallic;
 	ROUGHNESS = roughness;
 	NORMAL_MAP = normal_blend;

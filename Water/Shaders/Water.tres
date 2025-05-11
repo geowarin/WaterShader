@@ -1,8 +1,8 @@
 [gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://c3mh5p2w5s8g7"]
 
-[ext_resource type="Shader" uid="uid://bnwyfscttu28s" path="res://Shaders/Water.gdshader" id="1_wq4uc"]
-[ext_resource type="Texture2D" uid="uid://gq8n64t6y4go" path="res://Shaders/WaterPlaneNormal.tres" id="2_24cl4"]
-[ext_resource type="Texture2D" uid="uid://dhkuuan5kku8y" path="res://Shaders/wave.tres" id="3_vbcj7"]
+[ext_resource type="Shader" uid="uid://bnwyfscttu28s" path="res://Water/Shaders/Water.gdshader" id="1_wq4uc"]
+[ext_resource type="Texture2D" uid="uid://gq8n64t6y4go" path="res://Water/Shaders/WaterPlaneNormal.tres" id="2_24cl4"]
+[ext_resource type="Texture2D" uid="uid://dhkuuan5kku8y" path="res://Water/Shaders/wave.tres" id="3_vbcj7"]
 
 [resource]
 render_priority = 0
